@@ -7,7 +7,10 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Controller
+@Slf4j
 public class CalculatorController {
 
     @Autowired
@@ -15,15 +18,10 @@ public class CalculatorController {
 
     @GetMapping("/calculator")
     public String calculator(
-            @RequestParam(name = "num1", required = false, defaultValue = "2") float num1,
-            @RequestParam(name = "num2", required = false, defaultValue = "3") float num2,
-            @RequestParam(name = "op", required = false, defaultValue = "+") String op,
-            Model view) {
-                float result = this.calculatorService.calculate(num1, num2, op);
-                view.addAttribute("result", result);
-                view.addAttribute("num1", num1);
-                view.addAttribute("num2", num2);
-                view.addAttribute("op", op);
+            @RequestParam(name = "eval", required = false, defaultValue = "2+3=") String eval, Model view) {
+                String resultEval = this.calculatorService.process(eval);
+                log.info("resultEval: " + resultEval);
+                view.addAttribute("resultEval", resultEval);
         return "calculator";
     }
 

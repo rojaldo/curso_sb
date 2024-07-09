@@ -43,7 +43,7 @@ Use the following command to run the tests:
 
 ## Fix problems with git pull
 
-If you have problems with `git pull` because of the `.gitignore` file, use the following command:
+If you have problems with `git pull`, use the following command:
 
 ```bash
 git add -A
