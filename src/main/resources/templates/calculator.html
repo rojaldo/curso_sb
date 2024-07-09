@@ -19,15 +19,19 @@
     <main>
         <h1>Calculator</h1>
         <div class="container">
-            <div class="alert alert-primary" role="alert" th:if="${resultEval == null}" >
-                 <strong th:text="${num1} + ${op} + ${num2} + '=' + ${result}"/>
+            <div class="alert alert-primary" role="alert" th:if="${resultEval == null}">
+                <strong th:text="${num1} + ${op} + ${num2} + '=' + ${result}" />
             </div>
-            <div class="alert alert-success" role="alert" th:if="${resultEval != null && !resultEval.equals('Error')}" >
-                <strong th:text="${resultEval}"/>
-           </div>
-           <div class="alert alert-danger" role="alert" th:if="${resultEval != null && resultEval.equals('Error')}" >
-            <strong th:text="${resultEval}"/>
-       </div>
+            <div class="alert alert-success" role="alert" th:if="${resultEval != null && !resultEval.equals('Error')}">
+                <strong th:text="${resultEval}" />
+            </div>
+            <div class="alert alert-danger" role="alert" th:if="${resultEval != null && resultEval.equals('Error')}">
+                <strong th:text="${resultEval}" />
+            </div>
+            <ul class="list-group list-group">
+                <li th:each="prevResult : ${prevResults}" class="list-group-item" th:text="${prevResult}"/>
+            </ul>
+            
         </div>
 
 

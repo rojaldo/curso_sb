@@ -1,5 +1,7 @@
 package com.example.demo;
 
+import java.util.ArrayList;
+
 import org.springframework.stereotype.Service;
 
 enum CalculatorState {
@@ -18,24 +20,31 @@ public class CalculatorService {
     private float num2 = 0;
     private String op = "";
     private CalculatorState currentState = CalculatorState.INIT;
+    private ArrayList<String> prevResults = new ArrayList<String>();
 
     public float calculate(float num1, float num2, String op) {
+        float result = 0;
         switch (op) {
             case "+":
-                return num1 + num2;
-
+                result = num1 + num2;
+                break;
             case "-":
-                return num1 - num2;
+                result = num1 - num2;
+                break;
 
             case "*":
-                return num1 * num2;
+                result = num1 * num2;
+                break;
 
             case "/":
-                return num1 / num2;
+                result = num1 / num2;
+                break;
             default:
                 throw new IllegalArgumentException("Invalid operator: " + op);
 
         }
+        this.prevResults.add( String.valueOf(num1) + op + String.valueOf(num2) + "=" + String.valueOf(result));
+        return result;
     }
 
     public String process(String eval) {
@@ -115,5 +124,9 @@ public class CalculatorService {
             default:
                 break;
         }
+    }
+
+    public ArrayList<String> getPrevResults() {
+        return prevResults;
     }
 }

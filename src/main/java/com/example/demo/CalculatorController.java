@@ -22,6 +22,7 @@ public class CalculatorController {
                 String resultEval = this.calculatorService.process(eval);
                 log.info("resultEval: " + resultEval);
                 view.addAttribute("resultEval", resultEval);
+                view.addAttribute("prevResults", this.calculatorService.getPrevResults());
         return "calculator";
     }
 
@@ -32,6 +33,7 @@ public class CalculatorController {
                 view.addAttribute("num1", operationDto.getNum1());
                 view.addAttribute("num2", operationDto.getNum2());
                 view.addAttribute("op", operationDto.getOp());
+                view.addAttribute("prevResults", this.calculatorService.getPrevResults());
         return "calculator";
     }
 
