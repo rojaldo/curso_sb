@@ -16,7 +16,6 @@ public class GreetingController {
         message = "Hello " + message;
         view.addAttribute("my_msg", message);
         return "template";
-    }
-    
+    } 
     
 }
