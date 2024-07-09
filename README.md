@@ -41,7 +41,15 @@ Use the following command to run the tests:
 ./mvnw test
 ```
 
+## Fix problems with git pull
 
+If you have problems with `git pull` because of the `.gitignore` file, use the following command:
+
+```bash
+git add -A
+git stash
+git pull
+```
 
 ### Maven Parent overrides
 
