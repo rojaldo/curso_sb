@@ -1,5 +1,6 @@
 package com.example.demo.library.user;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -30,34 +31,41 @@ public class UserRestController {
     private UserService userService;
 
     @GetMapping("/users")
-    public ResponseEntity<Map> getMethodName() {
-        return ResponseEntity.status(HttpStatus.OK).body(Map.of("users", this.userService.getUsers()));
+    public ResponseEntity<List<IUserResponse>> getMethodName() {
+        return ResponseEntity.status(HttpStatus.OK).body(this.userService.getUsers());
     }
 
     @PostMapping("/users")
-    public ResponseEntity<Map> getMethodName(@RequestBody @Validated UserDto userDto) {
-        Optional<UserDto> user = this.userService.createUser(userDto);
-        if (user.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", "User not created: " + userDto));
+    public ResponseEntity<IUserResponse> getMethodName(@RequestBody @Validated UserDto userDto) {
+        Optional<IUserResponse> user = this.userService.createUser(userDto);
+        // check if object returned is UserErrorDto
+
+        if ( user.get() instanceof UserErrorDto) {
+            // cast to UserErrorDto
+            UserErrorDto userError = (UserErrorDto) user.get();
+            return ResponseEntity.status(userError.getCode()).body(userError);
         }
-        return ResponseEntity.status(HttpStatus.CREATED).body(Map.of("user", user.get()));
+        return ResponseEntity.status(HttpStatus.CREATED).body(user.get());
     }
 
     @PutMapping("/users/{id}")
-    public ResponseEntity<Map> getMethodName(@PathVariable Long id, @RequestBody @Validated UserDto userDto) {
-        Optional<UserDto> user = this.userService.updateUser(id, userDto);
-        if (user.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", "User not updated: " + userDto));
+    public ResponseEntity<IUserResponse> getMethodName(@PathVariable Long id, @RequestBody @Validated UserDto userDto) {
+        Optional<IUserResponse> user = this.userService.updateUser(id, userDto);
+        if ( user.get() instanceof UserErrorDto ) {
+            UserErrorDto userError = (UserErrorDto) user.get();
+            return ResponseEntity.status(userError.getCode()).body(userError);
         }
-        return ResponseEntity.status(HttpStatus.OK).body(Map.of("user", user.get()));
+        return ResponseEntity.status(HttpStatus.OK).body(user.get());
     }
 
     @DeleteMapping("/users/{id}")
-    public ResponseEntity<Map> getMethodName(@PathVariable Long id) {
-        if (this.userService.deleteUser(id).isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", "User not found: " + id));
+    public ResponseEntity<IUserResponse> getMethodName(@PathVariable Long id) {
+        Optional <IUserResponse> user = this.userService.deleteUser(id);
+        if (user.get() instanceof UserErrorDto) {
+            UserErrorDto userError = (UserErrorDto) user.get();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(userError);
         }
-        return ResponseEntity.status(HttpStatus.OK).body(Map.of("message", "User deleted: " + id));
+        return ResponseEntity.status(HttpStatus.OK).body(user.get());
     }
 
     

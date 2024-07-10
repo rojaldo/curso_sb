@@ -13,39 +13,39 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    List<UserDto> getUsers() {
+    List<IUserResponse> getUsers() {
         List<UserEntity> users = this.userRepository.findAll();
         return getDtos(users);
     }
 
-    UserDto getUserById(Long id) {
+    IUserResponse getUserById(Long id) {
         UserEntity user = this.userRepository.findById(id).orElse(null);
         return getDto(user);
     }
 
-    Optional<UserDto> createUser(UserDto userDto) {
+    Optional<IUserResponse> createUser(UserDto userDto) {
         UserEntity userEntity = UserEntity.builder().name(userDto.getName()).email(userDto.getEmail())
                 .age(userDto.getAge()).build();
         // check if email user already exists
         if (this.userRepository.findByEmail(userDto.getEmail()).isPresent()) {
-            return Optional.empty();
+            return Optional.of(UserErrorDto.builder().code(400).message("User email already exists").build());
         }
-        Optional<UserDto> response;
+        Optional<IUserResponse> response;
         try {
             response = Optional.of(getDto(this.userRepository.save(userEntity)));
         } catch (Exception e) {
-            return Optional.empty();
+            return Optional.of(UserErrorDto.builder().code(400).message("User not created").build());
         }
         if (response.isEmpty()) {
-            return Optional.empty();
+            return Optional.of(UserErrorDto.builder().code(400).message("User not created").build());
         }
         return response;
     }
 
-    Optional<UserDto> updateUser(Long id, UserDto userDto) {
+    Optional<IUserResponse> updateUser(Long id, UserDto userDto) {
         Optional<UserEntity> userEntity = this.userRepository.findById(id);
         if (userEntity.isEmpty()) {
-            return Optional.empty();
+            return Optional.of(UserErrorDto.builder().code(404).message("User not found").build());
         }
         UserEntity user = userEntity.get();
         user.setId(userEntity.get().getId());
@@ -55,21 +55,21 @@ public class UserService {
         try {
             return Optional.of(getDto(this.userRepository.save(user)));
         } catch (Exception e) {
-            return Optional.empty();
+            return Optional.of(UserErrorDto.builder().code(400).message("User not updated").build());
         }
     }
 
-    Optional<UserDto> deleteUser(Long id) {
+    Optional<IUserResponse> deleteUser(Long id) {
         Optional<UserEntity> userEntity = this.userRepository.findById(id);
         if (userEntity.isEmpty()) {
-            return Optional.empty();
+            return Optional.of(UserErrorDto.builder().code(404).message("User not found").build());
         }
         this.userRepository.delete(userEntity.get());
         return Optional.of(getDto(userEntity.get()));
     }
 
-    ArrayList<UserDto> getDtos(List<UserEntity> users) {
-        ArrayList<UserDto> userDtos = new ArrayList<UserDto>();
+    ArrayList<IUserResponse> getDtos(List<UserEntity> users) {
+        ArrayList<IUserResponse> userDtos = new ArrayList<IUserResponse>();
         for (UserEntity userEntity : users) {
             userDtos.add(UserDto.builder()
                     .id(userEntity.getId())
@@ -81,7 +81,7 @@ public class UserService {
         return userDtos;
     }
 
-    UserDto getDto(UserEntity userEntity) {
+    IUserResponse getDto(UserEntity userEntity) {
         return UserDto.builder()
                 .id(userEntity.getId())
                 .name(userEntity.getName())
