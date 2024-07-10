@@ -21,6 +21,7 @@ public class CalculatorService {
     private String op = "";
     private CalculatorState currentState = CalculatorState.INIT;
     private ArrayList<String> prevResults = new ArrayList<String>();
+    private ArrayList<OperationDto> prevDtoResults = new ArrayList<OperationDto>();
 
     public float calculate(float num1, float num2, String op) {
         float result = 0;
@@ -44,6 +45,7 @@ public class CalculatorService {
 
         }
         this.prevResults.add( String.valueOf(num1) + op + String.valueOf(num2) + "=" + String.valueOf(result));
+        this.prevDtoResults.add(OperationDto.builder().num1(num1).num2(num2).op(op).result(result).build());
         return result;
     }
 
@@ -128,5 +130,9 @@ public class CalculatorService {
 
     public ArrayList<String> getPrevResults() {
         return prevResults;
+    }
+
+    public ArrayList<OperationDto> getPrevDtoResults() {
+        return prevDtoResults;
     }
 }
