@@ -15,8 +15,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.example.demo.errors.ErrorDto;
 
 @RestController
 @RequestMapping("/api/v1/library")
@@ -26,44 +27,48 @@ public class BooksRestController {
     BooksService booksService;
 
     @GetMapping("/books")
-    public ResponseEntity<Iterable<BookDto>> getBooks(BookDto book) {
+    public ResponseEntity<Iterable<IBookResponse>> getBooks(BookDto book) {
         return ResponseEntity.ok().body(this.booksService.getAllBooks(book));
     }
 
     @PostMapping("/books")
-    public ResponseEntity<BookDto> createBook(@RequestBody @Validated BookDto book) {
-        Optional<BookDto> result = this.booksService.createBook(book);
-        if (result.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
+    public ResponseEntity<IBookResponse> createBook(@RequestBody @Validated BookDto book) {
+        Optional<IBookResponse> result = this.booksService.createBook(book);
+        if (result.get() instanceof ErrorDto) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body((ErrorDto) result.get());
         }
         return ResponseEntity.status(HttpStatus.CREATED).body(result.get());
     }
 
     @PutMapping("/books/{isbn}")
-    public ResponseEntity<BookDto> modifyBook(@RequestBody @Validated BookDto book, @PathVariable String isbn) {
-        Optional<BookDto> result = this.booksService.modifyBook(book, isbn);
-        if (result.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+    public ResponseEntity<IBookResponse> modifyBook(@RequestBody @Validated BookDto book, @PathVariable String isbn) {
+        Optional<IBookResponse> result = this.booksService.modifyBook(book, isbn);
+        if (result.get() instanceof ErrorDto) {
+            ErrorDto error = (ErrorDto) result.get();
+            return ResponseEntity.status(error.getCode()).body(error);
         }
         return ResponseEntity.status(HttpStatus.OK).body(result.get());
     }
 
     @PatchMapping("/books/{isbn}")
-    public ResponseEntity<BookDto> updateBook(@RequestBody @Validated BookDto book, @PathVariable String isbn) {
-        Optional<BookDto> result = this.booksService.updateBook(book, isbn);
-        if (result.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+    public ResponseEntity<IBookResponse> updateBook(@RequestBody @Validated BookDto book, @PathVariable String isbn) {
+        Optional<IBookResponse> result = this.booksService.updateBook(book, isbn);
+        if (result.get() instanceof ErrorDto) {
+            ErrorDto error = (ErrorDto) result.get();
+            return ResponseEntity.status(error.getCode()).body(error);
         }
         return ResponseEntity.status(HttpStatus.OK).body(result.get());
     }
 
     @DeleteMapping("/books/{isbn}")
-    public ResponseEntity<BookDto> deleteBook(@PathVariable String isbn) {
-        BookDto book = this.booksService.deleteBookByIsbn(isbn);
-        if (book == null) {
-            return ResponseEntity.notFound().build();
-        } else {
-            return ResponseEntity.status(200).body(book);
+    public ResponseEntity<IBookResponse> deleteBook(@PathVariable String isbn) {
+        Optional<IBookResponse> response = this.booksService.deleteBookByIsbn(isbn);
+        if (response.get() instanceof ErrorDto) {
+            ErrorDto userError = (ErrorDto) response.get();
+            return ResponseEntity.status(userError.getCode()).body(userError);
+        }
+        else {
+            return ResponseEntity.status(200).body(response.get());
         }
     }
     

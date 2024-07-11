@@ -10,6 +10,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.example.demo.errors.ErrorDto;
+
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -40,9 +43,9 @@ public class UserRestController {
         Optional<IUserResponse> user = this.userService.createUser(userDto);
         // check if object returned is UserErrorDto
 
-        if ( user.get() instanceof UserErrorDto) {
+        if ( user.get() instanceof ErrorDto) {
             // cast to UserErrorDto
-            UserErrorDto userError = (UserErrorDto) user.get();
+            ErrorDto userError = (ErrorDto) user.get();
             return ResponseEntity.status(userError.getCode()).body(userError);
         }
         return ResponseEntity.status(HttpStatus.CREATED).body(user.get());
@@ -51,8 +54,8 @@ public class UserRestController {
     @PutMapping("/users/{id}")
     public ResponseEntity<IUserResponse> getMethodName(@PathVariable Long id, @RequestBody @Validated UserDto userDto) {
         Optional<IUserResponse> user = this.userService.updateUser(id, userDto);
-        if ( user.get() instanceof UserErrorDto ) {
-            UserErrorDto userError = (UserErrorDto) user.get();
+        if ( user.get() instanceof ErrorDto ) {
+            ErrorDto userError = (ErrorDto) user.get();
             return ResponseEntity.status(userError.getCode()).body(userError);
         }
         return ResponseEntity.status(HttpStatus.OK).body(user.get());
@@ -61,8 +64,8 @@ public class UserRestController {
     @DeleteMapping("/users/{id}")
     public ResponseEntity<IUserResponse> getMethodName(@PathVariable Long id) {
         Optional <IUserResponse> user = this.userService.deleteUser(id);
-        if (user.get() instanceof UserErrorDto) {
-            UserErrorDto userError = (UserErrorDto) user.get();
+        if (user.get() instanceof ErrorDto) {
+            ErrorDto userError = (ErrorDto) user.get();
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(userError);
         }
         return ResponseEntity.status(HttpStatus.OK).body(user.get());

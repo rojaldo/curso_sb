@@ -1,4 +1,7 @@
-package com.example.demo.library.user;
+package com.example.demo.errors;
+
+import com.example.demo.library.books.IBookResponse;
+import com.example.demo.library.user.IUserResponse;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class UserErrorDto implements IUserResponse {
+public class ErrorDto implements IUserResponse, IBookResponse {
     private int code;
     private String message;
 }

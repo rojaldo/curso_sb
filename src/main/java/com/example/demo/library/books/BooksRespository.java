@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface BooksRespository extends JpaRepository<BookEntity, Long> {
 
-    BookEntity findById(long id);
+    Optional<BookEntity> findById(long id);
     Optional<BookEntity> findByIsbn(String isbn);
     List<BookEntity> findByTitleContainingIgnoreCase(String title);
     List<BookEntity> findByAuthorContainingIgnoreCase(String author);

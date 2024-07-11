@@ -17,7 +17,7 @@ import lombok.NonNull;
 @NoArgsConstructor 
 @AllArgsConstructor
 @Builder
-public class BookDto {
+public class BookDto implements IBookResponse {
     
     @Pattern(regexp = "^[0-9]{3}-[0-9]{10}$")
     private String isbn;
