@@ -51,6 +51,15 @@ git stash
 git pull
 ```
 
+## Run mysql container with podman
+
+Use the following command to run a mysql container:
+
+```bash
+podman run -d -p 3307:3306 -e MYSQL_DATABASE=mydatabase -e MYSQL_USER=myuser -e MYSQL_PASSWORD=secret -e 
+MYSQL_ROOT_PASSWORD=alguno mysql:9.0.0
+```
+
 ### Maven Parent overrides
 
 Due to Maven's design, elements are inherited from the parent POM to the project POM.
