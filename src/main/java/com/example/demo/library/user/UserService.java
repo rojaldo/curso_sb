@@ -15,14 +15,14 @@ import jakarta.transaction.Transactional;
 public class UserService {
 
     @Autowired
-    private UserRepository userRepository;
+    private UserLibraryRepository userRepository;
 
     List<IUserResponse> getUsers() {
         List<UserEntity> users = this.userRepository.findAll();
         return getDtos(users);
     }
 
-    IUserResponse getUserById(Long id) {
+    public IUserResponse getUserById(Long id) {
         UserEntity user = this.userRepository.findById(id).orElse(null);
         return getDto(user);
     }

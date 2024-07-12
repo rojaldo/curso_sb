@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.hibernate.validator.constraints.Length;
 
+import com.example.demo.library.lends.LendEntity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -47,5 +48,8 @@ public class BookEntity {
 
     @Positive
     private int pages;
+
+    @OneToMany(mappedBy = "book")
+    private List<LendEntity> lends;
 
 }

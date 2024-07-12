@@ -7,7 +7,7 @@ import javax.swing.text.html.Option;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface UserRepository extends JpaRepository<UserEntity, Long> {
+public interface UserLibraryRepository extends JpaRepository<UserEntity, Long> {
 
     List<UserEntity> findByName(String name);
     Optional<UserEntity> findByEmail(String email);
