@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 
 import com.example.demo.errors.ErrorDto;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class UserService {
 
@@ -25,6 +27,7 @@ public class UserService {
         return getDto(user);
     }
 
+    @Transactional
     Optional<IUserResponse> createUser(UserDto userDto) {
         UserEntity userEntity = UserEntity.builder().name(userDto.getName()).email(userDto.getEmail())
                 .age(userDto.getAge()).build();
@@ -44,6 +47,7 @@ public class UserService {
         return response;
     }
 
+    @Transactional
     Optional<IUserResponse> updateUser(Long id, UserDto userDto) {
         Optional<UserEntity> userEntity = this.userRepository.findById(id);
         if (userEntity.isEmpty()) {
@@ -61,6 +65,7 @@ public class UserService {
         }
     }
 
+    @Transactional
     Optional<IUserResponse> deleteUser(Long id) {
         Optional<UserEntity> userEntity = this.userRepository.findById(id);
         if (userEntity.isEmpty()) {
