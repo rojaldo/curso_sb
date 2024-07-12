@@ -66,7 +66,7 @@ paths:
                 $ref: '#/components/schemas/Error400'
     post:
       summary: Create user
-      description: Create user with name and email
+      description: Create user with name, email and age
       operationId: createUser
       tags:
         - "users"

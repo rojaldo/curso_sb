@@ -1,12 +1,16 @@
 package com.example.demo.library.user;
 
+import org.springframework.beans.factory.annotation.Value;
+
 import jakarta.annotation.Generated;
 import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -32,4 +36,11 @@ public class UserEntity {
     // positive or zero
     @Column(nullable = false, name = "age", updatable = true, columnDefinition = " INT CHECK (age >= 0)")
     private int age;
+
+    @Transient
+    @Value(" #{this.name} + ' ' + #{this.email}")
+    private String namePlusEmail;
+
+    @Embedded
+    private UserAddress address;
 }

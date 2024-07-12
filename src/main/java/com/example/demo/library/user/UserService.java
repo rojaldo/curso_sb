@@ -96,4 +96,16 @@ public class UserService {
                 .age(userEntity.getAge())
                 .build();
     }
+
+    public void initUsers() {
+        UserEntity user1 = UserEntity.
+        builder().
+        name("John Doe").
+        email("email@email.com").
+        age(30)
+        .address(
+                UserAddress.builder().city("City").country("Country").state("State").street("Street").zip("Zip").build())
+                .build();
+        this.userRepository.save(user1);
+    }
 }
